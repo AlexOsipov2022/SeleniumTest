@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 
 import java.time.Duration;
 
+import static java.awt.SystemColor.text;
 import static org.testng.Assert.fail;
 
 public class SeleniumWebFormAlertsTest {
@@ -90,8 +91,48 @@ public class SeleniumWebFormAlertsTest {
         String text = driver.findElement(By.tagName("h1")).getText();
 
         Assert.assertEquals("Heading", text);
-
     }
 
+    @Test
+    public void testDismissAlert() {
+
+        driver.get("https://www.selenium.dev/selenium/web/alerts.html");
+
+        driver.findElement(By.id("confirm")).click();
+        driver.switchTo().alert().dismiss();
+        String text = driver.findElement(By.tagName("h1")).getText();
+
+        Assert.assertEquals("Testing Alerts and Stuff", text);
+    }
+
+    //Тест Алерта с вводом данных
+    @Test
+    public void testAcceptPromt() {
+        driver.get("https://www.selenium.dev/selenium/web/alerts.html");
+
+        driver.findElement(By.id("prompt")).click();
+
+        WebDriverWait webDriverWait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        Alert alert = webDriverWait.until(ExpectedConditions.alertIsPresent());
+        final String enteredText = "Something text"; // в Selenium этот текст не отображается, но передается
+        alert.sendKeys(enteredText);
+        alert.accept();
+        String actualText = driver.findElement(By.xpath("//div[@id='text']/p")).getText();
+        Assert.assertEquals(enteredText, actualText);
+    }
+
+
+//    @Test
+//    public void testAcceptAlertFun() {
+//        driver.get("https://www.selenium.dev/selenium/web/alerts.html");
+//
+//        doSomethingWithAlert(
+//                alert -> alert.accept(),
+//                () -> {
+//
+//                }
+//        );
+//
+//    }
 
 }
